@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+    restart: unless-stopped
+    networks:
+      - myrail
+
+  api:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ./backend/vendor/bundle:/app/vendor/bundle
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+    networks:
+      - myrail
+
+volumes:
+  mongodb:
+    driver: local
+  bundle:
+    driver: local
+
+networks:
+  myrail:
+    name: myrail
