@@ -4,7 +4,7 @@ services:
   mongodb:
     image: mongo
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - mongodb:/data/db
     restart: unless-stopped
@@ -22,7 +22,7 @@ services:
       - ./backend:/app
       - ./backend/vendor/bundle:/app/vendor/bundle
     ports:
-      - 3000:3000
+      - 3002:3000
     depends_on:
       - mongodb
     networks:
